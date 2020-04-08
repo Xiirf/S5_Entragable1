@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Entrega1</string>
+    <string name="textview">TextView</string>
+    <string name="precio">Precio :</string>
+    <string name="fecha_de_salida">Fecha de Salida:</string>
+    <string name="fecha_de_llegada">Fecha de llegada:</string>
+    <string name="lugar_de_salida">Lugar de salida:</string>
+    <string name="seleccionar">Seleccionar</string>
+    <string name="viaje_imagen">Viaje imagen</string>
+    <string name="fecha_de_inicio">Fecha de Inicio:</string>
+    <string name="fecha_de_fin">Fecha de fin:</string>
+    <string name="save_filter">Save Filter</string>
+    <string name="precio_max">Precio max:</string>
+    <string name="precio_min">Precio min:</string>
+    <string name="clear_filter">Clear Filter</string>
+    <string name="columnas">Columnas</string>
+    <string name="descripci_n">Descripción:</string>
+</resources>
