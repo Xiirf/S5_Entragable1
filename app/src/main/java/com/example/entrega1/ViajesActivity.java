@@ -85,6 +85,7 @@ public class ViajesActivity extends AppCompatActivity {
         Long fechaFinPref = prefs.getLong(Constantes.fechaFin, 0);
         Long precioMin = prefs.getLong(Constantes.precioMin, 0);
         Long precioMax = prefs.getLong(Constantes.precioMax, 0);
+        Long test = viajes.get(0).getFechasInicio();
         // First use date filter
         if (fechaInicioPref != 0 && fechaFinPref == 0) {
             viajesFiltrados = viajes.stream().filter(viaje -> viaje.getFechasInicio() >= fechaInicioPref).collect(Collectors.toList());

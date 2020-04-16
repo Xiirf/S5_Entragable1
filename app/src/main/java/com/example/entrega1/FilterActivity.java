@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.example.entrega1.entity.Util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class FilterActivity extends AppCompatActivity {
 
@@ -45,6 +47,12 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     public void setFechaInicio(View view) {
+
+        if (prefs.getLong(Constantes.fechaInicio, 0) != 0) {
+            calendar.setTimeInMillis(prefs.getLong(Constantes.fechaInicio, 0));
+        } else {
+            calendar.setTime(new Date());
+        }
         int yy = this.calendar.get(Calendar.YEAR);
         int mm = this.calendar.get(Calendar.MONTH);
         int dd = this.calendar.get(Calendar.DAY_OF_MONTH);
@@ -67,6 +75,12 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     public void setFechaFin(View view) {
+        if (prefs.getLong(Constantes.fechaFin, 0) != 0) {
+            calendar.setTimeInMillis(prefs.getLong(Constantes.fechaFin, 0));
+        } else {
+            calendar.setTime(new Date());
+        }
+
         int yy = this.calendar.get(Calendar.YEAR);
         int mm = this.calendar.get(Calendar.MONTH);
         int dd = this.calendar.get(Calendar.DAY_OF_MONTH);
@@ -88,9 +102,20 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     public void saveFilter(View view) {
-
+        // Save FechaInicio or delete it
+        /*String fechaInicio = textViewFechaInicio.getText().toString();
+        if (fechaInicio.equals("")) {
+            edit.remove(Constantes.fechaInicio);
+        } else {
+            try {
+                Date d = f.parse(fechaInicio);
+                edit.putLong(Constantes.fechaInicio, d.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }*/
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
 
         // Save FechaInicio or delete it
         String fechaInicio = textViewFechaInicio.getText().toString();
@@ -106,12 +131,13 @@ public class FilterActivity extends AppCompatActivity {
         }
         // Save FechaFin or delete it
         String fechaFin = textViewFechaFin.getText().toString();
+        Calendar cal2 = Calendar.getInstance();
         if (fechaFin.equals("")) {
             edit.remove(Constantes.fechaFin);
         } else {
             try {
-                cal.setTime(sdf.parse(fechaFin));
-                edit.putLong(Constantes.fechaFin, Util.Calendar2long(cal));
+                cal2.setTime(sdf.parse(fechaFin));
+                edit.putLong(Constantes.fechaFin, Util.Calendar2long(cal2));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
