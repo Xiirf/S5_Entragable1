@@ -1,11 +1,13 @@
 package com.example.entrega1;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -20,16 +22,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class FilterActivity extends AppCompatActivity {
 
     private TextView textViewFechaInicio, textViewFechaFin;
-    private Calendar calendar = Calendar.getInstance();
     private EditText editTextPrecioMin, editTextPrecioMax;
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
+    private DatePickerDialog dialogInicio, dialogFin;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
@@ -46,50 +48,59 @@ public class FilterActivity extends AppCompatActivity {
         setFilter();
     }
 
-    public void setFechaInicio(View view) {
+    public void setFechaInicio(View view) throws ParseException {
+        Calendar calendarInicio = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.UK);
+        int yy = calendarInicio.get(Calendar.YEAR);
+        int mm = calendarInicio.get(Calendar.MONTH);
+        int dd = calendarInicio.get(Calendar.DAY_OF_MONTH);
 
-        if (prefs.getLong(Constantes.fechaInicio, 0) != 0) {
-            calendar.setTimeInMillis(prefs.getLong(Constantes.fechaInicio, 0));
-        } else {
-            calendar.setTime(new Date());
-        }
-        int yy = this.calendar.get(Calendar.YEAR);
-        int mm = this.calendar.get(Calendar.MONTH);
-        int dd = this.calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        dialogInicio = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 String date = day+"/" + (month + 1)+"/"+year;
                 Calendar cal = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.UK);
                 try {
                     cal.setTime(sdf.parse(date));
                     textViewFechaInicio.setText(Util.formateaFecha(cal));
+                    if (!textViewFechaFin.getText().toString().equals("")) {
+                        SimpleDateFormat f = new SimpleDateFormat("dd MMM yyyy", Locale.UK);
+                        Calendar cal2 = Calendar.getInstance();
+                        cal2.setTime(f.parse(textViewFechaFin.getText().toString()));
+                        Date date1 = cal.getTime();
+                        Date date2 = cal2.getTime();
+                        if (date1.after(date2)) {
+                            textViewFechaFin.setText("");
+                        }
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
         }, yy,mm,dd);
-        dialog.show();
+        dialogInicio.getDatePicker().setMinDate(calendarInicio.getTimeInMillis());
+        dialogInicio.show();
     }
 
-    public void setFechaFin(View view) {
-        if (prefs.getLong(Constantes.fechaFin, 0) != 0) {
-            calendar.setTimeInMillis(prefs.getLong(Constantes.fechaFin, 0));
-        } else {
-            calendar.setTime(new Date());
+    public void setFechaFin(View view) throws ParseException {
+        Calendar calendarFin = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.UK);
+        if (!textViewFechaInicio.getText().toString().equals("")) {
+            calendarFin.setTime(sdf.parse(textViewFechaInicio.getText().toString()));
         }
 
-        int yy = this.calendar.get(Calendar.YEAR);
-        int mm = this.calendar.get(Calendar.MONTH);
-        int dd = this.calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        int yy = calendarFin.get(Calendar.YEAR);
+        int mm = calendarFin.get(Calendar.MONTH);
+        int dd = calendarFin.get(Calendar.DAY_OF_MONTH);
+        dialogFin = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 String date = day+"/" + (month + 1)+"/"+year;
                 Calendar cal = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.UK);
                 try {
                     cal.setTime(sdf.parse(date));
                     textViewFechaFin.setText(Util.formateaFecha(cal));
@@ -98,24 +109,13 @@ public class FilterActivity extends AppCompatActivity {
                 }
             }
         }, yy,mm,dd);
-        dialog.show();
+        dialogFin.getDatePicker().setMinDate(calendarFin.getTimeInMillis());
+        dialogFin.show();
     }
 
     public void saveFilter(View view) {
-        // Save FechaInicio or delete it
-        /*String fechaInicio = textViewFechaInicio.getText().toString();
-        if (fechaInicio.equals("")) {
-            edit.remove(Constantes.fechaInicio);
-        } else {
-            try {
-                Date d = f.parse(fechaInicio);
-                edit.putLong(Constantes.fechaInicio, d.getTime());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }*/
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.UK);
 
         // Save FechaInicio or delete it
         String fechaInicio = textViewFechaInicio.getText().toString();

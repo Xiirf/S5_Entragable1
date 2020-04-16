@@ -151,7 +151,7 @@ public class Viaje implements Serializable {
         calendar.set(Calendar.DAY_OF_YEAR, dayOfYear);
 
         Long[] fechas = new Long[2];
-        Long start = calendar.getTimeInMillis();
+        Long start = Util.Calendar2long(calendar);
 
         int timeViaje = new Random().nextInt(14) + 7;
         if ((timeViaje + dayOfYear) > 365) {
@@ -164,7 +164,8 @@ public class Viaje implements Serializable {
         calendar2.set(Calendar.YEAR, year);
         calendar2.set(Calendar.DAY_OF_YEAR, dayOfYear);
 
-        Long end = calendar2.getTimeInMillis();
+        Long end = Util.Calendar2long(calendar2);
+
 
         fechas[0] = start;
         fechas[1] = end;
