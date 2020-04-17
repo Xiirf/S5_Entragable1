@@ -15,4 +15,23 @@
     <string name="clear_filter">Clear Filter</string>
     <string name="columnas">Columnas</string>
     <string name="descripci_n">Descripción:</string>
+    <string name="login_email_et_hint">Correo electrónico</string>
+    <string name="login_pass_et_hint">Contraseña</string>
+    <string name="login_button_mail_text">Acceder</string>
+    <string name="login_button_register_text">Pulse aqui para registrarse</string>
+    <string name="login_button_google_text">Acceder con google</string>
+    <string name="login_email_error_1">El correo electrónico no puede estar vacío</string>
+    <string name="login_mail_error_2">La contraseña no puede estar vacío</string>
+    <string name="login_email_access_error">Se ha producido un error al acceso</string>
+    <string name="login_verified_mail_error">Aún no has validado su cuenta. ¿Quiere que le enviemos un correo electrónico de verificación?</string>
+    <string name="login_verified_mail_error_ok">Enviar correo</string>
+    <string name="login_verified_email_error_sent">Te hemos enviado el correo</string>
+    <string name="login_verified_email_error_no_sent">No se ha podido enviar el correo</string>
+    <string name="login_verified_mail_error_cancel">Cancelar</string>
+    <string name="login_google_play_service_error">Debe actualizar Google Play Service antes de continuar</string>
+    <string name="login_download_gps">Actualizar</string>
+    <string name="gps_download_url">market://details?id=com.google.android.gms</string>
+    <string name="market_download_url">https://play.google.com/store/apps/details?id=com.google.android.gms</string>
+    <string name="default_client_id">733580265979-qitde738dhvr5uqmks2577dum181kac8.apps.googleusercontent.com</string>
+    <string name="login_completed">El usuario %1$s ha accedido correctamente</string>
 </resources>

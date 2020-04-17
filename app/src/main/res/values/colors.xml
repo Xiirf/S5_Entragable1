@@ -3,4 +3,8 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="blue_button">#0AC4CA</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red_google">#FF1807</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>
