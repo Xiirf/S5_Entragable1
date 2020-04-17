@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "733580265979",
+    "firebase_url": "https://acmeexplorermovil.firebaseio.com",
+    "project_id": "acmeexplorermovil",
+    "storage_bucket": "acmeexplorermovil.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733580265979:android:55f659e9b4fed903b6a35e",
+        "android_client_info": {
+          "package_name": "com.example.entrega1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733580265979-dkdqsphisj74vc1tokaieirkb9ga3e29.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.entrega1",
+            "certificate_hash": "15bea28e1150915d8c9da2f0a5f9dc52ca6e3083"
+          }
+        },
+        {
+          "client_id": "733580265979-qitde738dhvr5uqmks2577dum181kac8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_o-nHm3yaPx0swvAi8YkFvPd_lXrZAJE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733580265979-qitde738dhvr5uqmks2577dum181kac8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
