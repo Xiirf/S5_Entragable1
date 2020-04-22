@@ -13,8 +13,11 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.entrega1.entity.Enlace;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -30,6 +33,18 @@ public class MainActivity extends AppCompatActivity {
         gridView = findViewById(R.id.gridView);
         EnlaceAdapter enlaceAdapter = new EnlaceAdapter(Enlace.generaEnlaces(), this);
         gridView.setAdapter(enlaceAdapter);
+    }
+
+    public void disconnect(View view) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        try {
+            mAuth.signOut();
+            Toast.makeText(this, getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();;
+        }catch (Exception e) {
+            Toast.makeText(this, getString(R.string.logout_error), Toast.LENGTH_SHORT).show();
+        }
     }
 }
 

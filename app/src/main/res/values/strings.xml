@@ -34,4 +34,13 @@
     <string name="market_download_url">https://play.google.com/store/apps/details?id=com.google.android.gms</string>
     <string name="default_client_id">733580265979-qitde738dhvr5uqmks2577dum181kac8.apps.googleusercontent.com</string>
     <string name="login_completed">El usuario %1$s ha accedido correctamente</string>
+    <string name="login_pass_confirmation_et_hint">Introducir de nuevo la contraseña</string>
+    <string name="login_button_signup_text">Registar usuario</string>
+    <string name="signup_error_user">El correo no es valido</string>
+    <string name="signup_error_pass">La contraseña no es valida</string>
+    <string name="signup_error_match_pass">Las contraseñas no coinciden</string>
+    <string name="signup_created">El usuario se ha registrado correctamente</string>
+    <string name="signup_not_created">Se ha producido un error al registrar el nuevo usuario</string>
+    <string name="logout_error">Se produjo un error durante la desconexión.</string>
+    <string name="logout_success">"Has sido desconectado "</string>
 </resources>

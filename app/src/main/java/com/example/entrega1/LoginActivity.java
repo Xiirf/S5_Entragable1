@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         progressBar = findViewById(R.id.login_progress);
+        progressBar.setVisibility(View.GONE);
         loginEmail = findViewById(R.id.login_email_et);
         loginPass = findViewById(R.id.login_pass_et);
         loginEmailParent = findViewById(R.id.login_email);
@@ -67,6 +68,14 @@ public class LoginActivity extends AppCompatActivity {
         signInButtonGoogle.setOnClickListener(l -> attemptLoginGoogle(googleSignInOptions));
 
         signInButtonMail.setOnClickListener(l -> attemptLoginEmail());
+
+        loginButtonSignUp.setOnClickListener(l -> redirectSignUpActivity());
+    }
+
+    private void redirectSignUpActivity() {
+        Intent intent = new Intent(this, SignupActivity.class);
+        intent.putExtra(SignupActivity.EMAIL_PARAM, loginEmail.getText().toString());
+        startActivity(intent);
     }
 
     private void attemptLoginGoogle(GoogleSignInOptions googleSignInOptions) {
@@ -109,13 +118,14 @@ public class LoginActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void attemptLoginEmail() {
+        hideLoginButton(true);
         loginEmail.setError(null);
         loginPassParent.setError(null);
 
         if (loginEmail.getText().length() == 0) {
             loginEmailParent.setErrorEnabled(true);
             loginEmailParent.setError(getString(R.string.login_email_error_1));
-        } else if (loginEmail.getText().length() == 0) {
+        } else if (loginPass.getText().length() == 0) {
             loginPassParent.setErrorEnabled(true);
             loginPassParent.setError(getString(R.string.login_mail_error_2));
         } else {
@@ -159,6 +169,8 @@ public class LoginActivity extends AppCompatActivity {
         //Dummy
         //TODO: complete
         Toast.makeText(this, String.format(getString(R.string.login_completed), user.getEmail()), Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
