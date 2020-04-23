@@ -98,6 +98,7 @@ public class CreateViajeActivity extends AppCompatActivity {
                         Date date2 = cal2.getTime();
                         if (date1.after(date2)) {
                             textViewFechaFin.setText("");
+                            fechaFin = null;
                         }
                     }
                 } catch (ParseException e) {

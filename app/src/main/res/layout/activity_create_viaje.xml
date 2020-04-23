@@ -30,68 +30,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:weightSum="4">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fechaInicio_parent"
-                    android:layout_width="0dp"
-                    android:layout_weight="3"
-                    android:layout_height="wrap_content">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/textView_fechaInicio_form"
-                        android:layout_height="match_parent"
-                        android:layout_width="match_parent"
-                        android:gravity="center_vertical"
-                        android:inputType="none"
-                        android:hint="@string/fecha_de_inicio"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:onClick="setFechaInicioForm"
-                    app:srcCompat="@drawable/ic_event_brown_24dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="4"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fechaFin_parent"
-                    android:layout_width="0dp"
-                    android:layout_weight="3"
-                    android:layout_height="wrap_content">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/textView_fechaFin_form"
-                        android:layout_height="match_parent"
-                        android:layout_width="match_parent"
-                        android:gravity="center_vertical"
-                        android:inputType="none"
-                        android:hint="@string/fecha_de_fin"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:onClick="setFechaFinForm"
-                    app:srcCompat="@drawable/ic_event_brown_24dp" />
-            </LinearLayout>
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nombre_trip"
                 android:layout_width="match_parent"
@@ -155,6 +93,70 @@
                     android:singleLine="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/fechaInicio_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/textView_fechaInicio_form"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:gravity="center_vertical"
+                        android:inputType="none"
+                        android:hint="@string/fecha_de_inicio"
+                        android:enabled="false"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="setFechaInicioForm"
+                    app:srcCompat="@drawable/ic_event_brown_24dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="4"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/fechaFin_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/textView_fechaFin_form"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:gravity="center_vertical"
+                        android:inputType="none"
+                        android:hint="@string/fecha_de_fin"
+                        android:enabled="false"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="setFechaFinForm"
+                    app:srcCompat="@drawable/ic_event_brown_24dp" />
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/login_button_mail"

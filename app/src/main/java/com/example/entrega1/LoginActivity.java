@@ -92,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> result = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
+                Toast.makeText(LoginActivity.this, "test", Toast.LENGTH_LONG).show();
                 GoogleSignInAccount account = result.getResult(ApiException.class);
                 assert account != null;
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -124,9 +125,11 @@ public class LoginActivity extends AppCompatActivity {
 
         if (loginEmail.getText().length() == 0) {
             loginEmailParent.setErrorEnabled(true);
+            hideLoginButton(false);
             loginEmailParent.setError(getString(R.string.login_email_error_1));
         } else if (loginPass.getText().length() == 0) {
             loginPassParent.setErrorEnabled(true);
+            hideLoginButton(false);
             loginPassParent.setError(getString(R.string.login_mail_error_2));
         } else {
             signInEmail();
