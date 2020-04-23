@@ -48,7 +48,7 @@ public class Enlace {
         List<Enlace> enlaces = new ArrayList<>();
         enlaces.add(new Enlace("Viajes disponibles", R.drawable.trip, ViajesActivity.class));
         enlaces.add(new Enlace("Viajes seleccionados", R.drawable.selec, ViajesSeleccionadosActivity.class));
-        enlaces.add(new Enlace("Crear un viaje", R.drawable.selec, CreateViajeActivity.class));
+        enlaces.add(new Enlace("Crear un viaje", R.drawable.create, CreateViajeActivity.class));
 
         return enlaces;
     }

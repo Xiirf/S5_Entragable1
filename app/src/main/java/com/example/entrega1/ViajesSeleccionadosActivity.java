@@ -64,12 +64,6 @@ public class ViajesSeleccionadosActivity extends AppCompatActivity {
 
                         viajes = getViajesSeleccionados(viajes);
 
-                        if (viajes.size() == 0) {
-                            Toast.makeText(ViajesSeleccionadosActivity.this, "No hay viajes seleccionados", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(ViajesSeleccionadosActivity.this, "Hay " + viajes.size() + " viajes seleccionados", Toast.LENGTH_LONG).show();
-                        }
-
                         ViajesAdapter adapter = new ViajesAdapter(viajes, ViajesSeleccionadosActivity.this);
 
                         recyclerView.setLayoutManager(new GridLayoutManager(ViajesSeleccionadosActivity.this, 1));

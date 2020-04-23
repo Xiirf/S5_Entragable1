@@ -75,12 +75,6 @@ public class ViajesActivity extends AppCompatActivity {
                         //Check which trips are selected by the actual user
                         checkSelectedTrip();
 
-                        if (viajes.size() == 0) {
-                            Toast.makeText(ViajesActivity.this, "No hay viajes con las condiciones de filtro", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(ViajesActivity.this, "Hay " + viajes.size() + " viajes con las condiciones de filtro", Toast.LENGTH_LONG).show();
-                        }
-
                         ViajesAdapter adapter = new ViajesAdapter(viajes, ViajesActivity.this);
 
                         // Setup column number
@@ -93,6 +87,12 @@ public class ViajesActivity extends AppCompatActivity {
                         recyclerView.setAdapter(adapter);
                     }
                 });
+
+                if (viajes.size() == 0) {
+                    Toast.makeText(ViajesActivity.this, "No hay viajes con las condiciones de filtro", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ViajesActivity.this, "Hay " + viajes.size() + " viajes con las condiciones de filtro", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
