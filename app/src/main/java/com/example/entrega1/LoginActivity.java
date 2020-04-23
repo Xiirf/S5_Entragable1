@@ -92,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> result = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                Toast.makeText(LoginActivity.this, "test", Toast.LENGTH_LONG).show();
                 GoogleSignInAccount account = result.getResult(ApiException.class);
                 assert account != null;
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
