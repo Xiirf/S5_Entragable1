@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void attemptLoginEmail() {
         hideLoginButton(true);
-        loginEmail.setError(null);
+        loginEmailParent.setError(null);
         loginPassParent.setError(null);
 
         if (loginEmail.getText().length() == 0) {

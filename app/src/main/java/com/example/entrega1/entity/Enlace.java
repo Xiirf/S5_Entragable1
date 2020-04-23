@@ -1,5 +1,6 @@
 package com.example.entrega1.entity;
 
+import com.example.entrega1.CreateViajeActivity;
 import com.example.entrega1.R;
 import com.example.entrega1.ViajesActivity;
 import com.example.entrega1.ViajesSeleccionadosActivity;
@@ -47,6 +48,7 @@ public class Enlace {
         List<Enlace> enlaces = new ArrayList<>();
         enlaces.add(new Enlace("Viajes disponibles", R.drawable.trip, ViajesActivity.class));
         enlaces.add(new Enlace("Viajes seleccionados", R.drawable.selec, ViajesSeleccionadosActivity.class));
+        enlaces.add(new Enlace("Crear un viaje", R.drawable.selec, CreateViajeActivity.class));
 
         return enlaces;
     }

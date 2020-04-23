@@ -43,4 +43,14 @@
     <string name="signup_not_created">Se ha producido un error al registrar el nuevo usuario</string>
     <string name="logout_error">Se produjo un error durante la desconexión.</string>
     <string name="logout_success">"Has sido desconectado "</string>
+    <string name="crear_viaje">Crear viaje</string>
+    <string name="creaci_n_de_viajes">Creación de viajes</string>
+    <string name="destino">Destino</string>
+    <string name="lugar_de_salida_form">Lugar de salida</string>
+    <string name="nombre_form_error">Se debe indicar el destino</string>
+    <string name="lugarSalida_form_error">Se debe indicar el lugar de salida</string>
+    <string name="precio_form_error">Se debe indicar el precio del viaje</string>
+    <string name="description_form_error">Se debe indicar la descripción del viaje</string>
+    <string name="fechaInicio_form_error">Se debe indicar una fecha de inicio</string>
+    <string name="fechaFin_form_error">Se debe indicar una fecha de fin</string>
 </resources>

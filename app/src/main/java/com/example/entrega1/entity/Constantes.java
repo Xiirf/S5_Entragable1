@@ -1,13 +1,13 @@
 package com.example.entrega1.entity;
 
 public final class Constantes {
-    public final static String[] ciudades={"Tirana","Berlin","Andorra La Vieja","ErevÃ¡n","Viena","BakÃº","Bruselas",
-            "Minsk","Sarajevo","SofÃ­a","Praga","Zagreb","Copenhague","Bratislava","Lublijana","Madrid","TallÃ­n",
+    public final static String[] ciudades={"Tirana","Berlin","Andorra La Vieja","Viena","Bruselas",
+            "Minsk","Sarajevo","Praga","Zagreb","Copenhague","Bratislava","Lublijana","Madrid",
             "Helsinki","Paris","Tiflis","Atenas","Budapest","DublÃ­n","Reikiavik","Roma","Riga","Vaduz","Vilna",
-            "Luxemburgo","Skopje","La Valeta","Chisinau","MÃ³naco","Podgorica","Oslo","Amsterdam","Varsovia",
+            "Luxemburgo","Skopje","La Valeta","Chisinau","Monaco","Podgorica","Oslo","Amsterdam","Varsovia",
             "Lisboa","Londres","Bucarest","MoscÃº","Ciudad De San Marino","Belgrado","Estocolmo","Berna","Kiev",
             "Ciudad Del Vaticano"};
-    public final static String[] lugarSalida={"Sevilla","MÃ¡laga","Faro","Barcelona","Madrid","Valencia"};
+    public final static String[] lugarSalida={"Sevilla","Malaga","Faro","Barcelona","Madrid","Valencia"};
     public final static String filtroPreferences="Filtro",fechaInicio="FechaInicio",fechaFin="FechaFin", precioMin="PrecioMin",
     precioMax="PrecioMax";
     public final static String[] urlImagenes={"https://png.pngtree.com/element_pic/17/09/23/891e71ffa7e5efe9f5440513fa069add.jpg",

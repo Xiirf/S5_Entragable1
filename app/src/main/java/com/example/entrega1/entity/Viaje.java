@@ -15,19 +15,26 @@ public class Viaje implements Serializable {
     private Long fechasInicio, fechasFin;
     private String nombre, url, lugarSalida, id, descripcion;
     private Long precio;
-    private boolean seleccionado;
+    private boolean isSeleccionado;
 
-    public Viaje(String id, Long fechasInicio, Long fechasFin, String nombre, String lugarSalida,
-                 String url, Long precio, boolean seleccionado, String descripcion) {
+    public Viaje(Long fechasInicio, Long fechasFin, String nombre, String lugarSalida,
+                 String url, Long precio, String descripcion, boolean isSeleccionado) {
         this.fechasInicio = fechasInicio;
         this.fechasFin = fechasFin;
         this.lugarSalida = lugarSalida;
         this.nombre = nombre;
         this.url = url;
         this.precio = precio;
-        this.id = id;
-        this.seleccionado = seleccionado;
         this.descripcion = descripcion;
+        this.isSeleccionado = isSeleccionado;
+    }
+
+    public boolean isSeleccionado() {
+        return isSeleccionado;
+    }
+
+    public void setSeleccionado(boolean seleccionado) {
+        isSeleccionado = seleccionado;
     }
 
     public String getDescripcion() {
@@ -52,14 +59,6 @@ public class Viaje implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public boolean isSeleccionado() {
-        return seleccionado;
-    }
-
-    public void setSeleccionado(boolean seleccionado) {
-        this.seleccionado = seleccionado;
     }
 
     public Long getFechasInicio() {
@@ -113,7 +112,6 @@ public class Viaje implements Serializable {
                 ", id='" + id + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 ", precio=" + precio +
-                ", seleccionado=" + seleccionado +
                 '}';
     }
 
@@ -124,7 +122,7 @@ public class Viaje implements Serializable {
         int numeroLugarSalida = Constantes.lugarSalida.length;
         int numeroUrlImagenes = Constantes.urlImagenes.length;
         
-        for(int i=0; i<50; i++){
+        for(int i=0; i < max; i++){
             Long[] fechas = randomDate();
             Long fechasInicio = fechas[0];
             Long fechasFin = fechas[1];
@@ -132,19 +130,52 @@ public class Viaje implements Serializable {
             String url = Constantes.urlImagenes[new Random().nextInt(numeroUrlImagenes)];
             String lugarSalida = Constantes.lugarSalida[new Random().nextInt(numeroLugarSalida)];
             Long precio = new Long(new Random().nextInt(5000) +1);
-            String id = UUID.randomUUID().toString();
             String descripcion = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet libero vehicula, molestie sapien id, placerat nulla. Nullam volutpat augue sed lorem pellentesque dapibus. Duis maximus, dolor et accumsan blandit, velit ex fringilla risus, sed congue augue justo at nisl. Integer volutpat maximus fermentum. Donec nec suscipit libero, eu maximus dui. Aenean imperdiet porttitor nisl, tristique pharetra massa eleifend eget. Mauris ullamcorper turpis sit amet volutpat cursus. Donec at arcu non ante commodo interdum quis eu leo. Fusce mollis tellus nibh, id tempus nibh fermentum eu. Morbi ut enim rhoncus, interdum felis vitae, mattis justo. Aliquam semper lacus at risus pharetra elementum.\n" +
                     "\n" +
                     "Mauris magna arcu, volutpat vel malesuada sit amet, efficitur a justo. Praesent aliquet euismod pellentesque. Phasellus facilisis ante vitae massa pretium, ut ullamcorper lorem tincidunt. Sed tempus ac ex non interdum. Aenean tellus nunc, porttitor ut dui in, tempor placerat quam. Integer nec urna blandit, aliquet arcu vitae, venenatis magna. Nullam mattis libero justo, vel consequat elit mollis at. Curabitur finibus lacinia bibendum. Phasellus euismod, eros et vehicula luctus, mi nisi consequat justo, at varius magna mi id nisi. Maecenas ipsum ante, blandit vitae ante quis, posuere venenatis nisi. Suspendisse placerat lorem sed massa rhoncus maximus. Nunc in mauris accumsan, placerat quam vitae, facilisis diam. Cras vitae nunc diam. Aliquam in rutrum nisi.";
-            viajes.add(new Viaje(id, fechasInicio, fechasFin, lugarSalida, nombre, url, precio, false, descripcion));
+            viajes.add(new Viaje(fechasInicio, fechasFin, lugarSalida, nombre, url, precio, descripcion, false));
         }
         return viajes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Viaje viaje = (Viaje) o;
+
+        if (fechasInicio != null ? !fechasInicio.equals(viaje.fechasInicio) : viaje.fechasInicio != null)
+            return false;
+        if (fechasFin != null ? !fechasFin.equals(viaje.fechasFin) : viaje.fechasFin != null)
+            return false;
+        if (nombre != null ? !nombre.equals(viaje.nombre) : viaje.nombre != null) return false;
+        if (url != null ? !url.equals(viaje.url) : viaje.url != null) return false;
+        if (lugarSalida != null ? !lugarSalida.equals(viaje.lugarSalida) : viaje.lugarSalida != null)
+            return false;
+        if (id != null ? !id.equals(viaje.id) : viaje.id != null) return false;
+        if (descripcion != null ? !descripcion.equals(viaje.descripcion) : viaje.descripcion != null)
+            return false;
+        return precio != null ? precio.equals(viaje.precio) : viaje.precio == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = fechasInicio != null ? fechasInicio.hashCode() : 0;
+        result = 31 * result + (fechasFin != null ? fechasFin.hashCode() : 0);
+        result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (lugarSalida != null ? lugarSalida.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (descripcion != null ? descripcion.hashCode() : 0);
+        result = 31 * result + (precio != null ? precio.hashCode() : 0);
+        return result;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static Long[] randomDate() {
 
-        int year = new Random().nextInt(5) + 2020;
+        int year = new Random().nextInt(2) + 2020;
         int dayOfYear = new Random().nextInt(365) + 1;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);

@@ -27,9 +27,9 @@ import com.squareup.picasso.Picasso;
 public class ViajesAdapter extends RecyclerView.Adapter<ViajesAdapter.ViewHolder> {
 
     private static final int PICK_DISPLAY_VIAJE = 19;
-    List<Viaje> viajes;
-    LayoutInflater layoutInflater;
-    Activity activity;
+    private List<Viaje> viajes;
+    private LayoutInflater layoutInflater;
+    private Activity activity;
 
     public ViajesAdapter(List<Viaje> viajes, Activity activity) {
         this.viajes = viajes;
@@ -58,6 +58,7 @@ public class ViajesAdapter extends RecyclerView.Adapter<ViajesAdapter.ViewHolder
                 Util.formateaFecha(viaje.getFechasFin())));
         //Checkbouton
         Drawable image = activity.getResources().getDrawable(R.drawable.ic_star_border_black_24dp);
+        // TODO méthode qui vérifie si l'utilisateur actuel possède ce voyage
         if (this.activity.getClass().getSimpleName().equals("ViajesActivity") && viaje.isSeleccionado()) {
             image = activity.getResources().getDrawable(R.drawable.ic_star_black_24dp);
         } else if (this.activity.getClass().getSimpleName().equals("ViajesSeleccionadosActivity")){

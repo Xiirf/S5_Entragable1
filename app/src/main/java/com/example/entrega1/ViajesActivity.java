@@ -1,5 +1,7 @@
 package com.example.entrega1;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -8,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -17,10 +21,12 @@ import android.widget.Toast;
 import com.example.entrega1.adapter.ViajesAdapter;
 import com.example.entrega1.entity.Constantes;
 import com.example.entrega1.entity.Viaje;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +37,11 @@ public class ViajesActivity extends AppCompatActivity {
     private Switch switchCol;
     private GridLayoutManager gridLayoutManager;
     private RecyclerView recyclerView;
-    List<Viaje> viajes;
+    private FirebaseDatabaseService firebaseDatabaseService;
+    private DatabaseReference refViaje, refUserViajes;
+    private List<Viaje> viajes;
+    private List<String> userViajesId;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,39 +51,114 @@ public class ViajesActivity extends AppCompatActivity {
         switchCol = findViewById(R.id.switchCol);
 
         recyclerView = findViewById(R.id.recyclerViajes);
-        // Recuperacion de los viajes si hay algunos almacenados
-        SharedPreferences prefs = this.getSharedPreferences("Viaje", Context.MODE_PRIVATE);
-        String viajesJSONString = prefs.getString("viajes", null);
-        if (viajesJSONString == null) {
-            viajes = Viaje.generarViaje(50);
-            viajesJSONString = new Gson().toJson(viajes);
-            SharedPreferences.Editor edit = prefs.edit();
-            edit.putString("viajes", viajesJSONString);
-            edit.apply();
-        } else {
-            Type type = new TypeToken<List<Viaje>>() {}.getType();
-            viajes = new Gson().fromJson(viajesJSONString, type);
-        }
 
-        // Use filter
-        viajes = filterList(viajes);
+        viajes = new ArrayList<>();
+        //Recuperacion de todos los viajes from BD
+        FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
+        refViaje = firebaseDatabaseService.getTravels();
+        refUserViajes = firebaseDatabaseService.getUserTravels();
+        //Generate some trips and save them in database
+        //genTravelAndSaveThem(20);
+        getViajes(new FirebaseCallback() {
+            @Override
+            public void onCallback(List<Viaje> listV) {
+                viajes = listV;
 
-        if (viajes.size() == 0) {
-            Toast.makeText(this, "No hay viajes con las condiciones de filtro", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Hay " + viajes.size() + " viajes con las condiciones de filtro", Toast.LENGTH_LONG).show();
-        }
+                // Use filter
+                viajes = filterList(viajes);
 
-        ViajesAdapter adapter = new ViajesAdapter(viajes, this);
+                getUserViajesId(new FirebaseCallbackIdViajes() {
+                    @Override
+                    public void onCallback(List<String> listId) {
+                        userViajesId = listId;
 
-        // Setup column number
-        if (switchCol.isChecked()) {
-            gridLayoutManager = new GridLayoutManager(this, 2);
-        } else {
-            gridLayoutManager = new GridLayoutManager(this, 1);
-        }
-        recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setAdapter(adapter);
+                        //Check which trips are selected by the actual user
+                        checkSelectedTrip();
+
+                        if (viajes.size() == 0) {
+                            Toast.makeText(ViajesActivity.this, "No hay viajes con las condiciones de filtro", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(ViajesActivity.this, "Hay " + viajes.size() + " viajes con las condiciones de filtro", Toast.LENGTH_LONG).show();
+                        }
+
+                        ViajesAdapter adapter = new ViajesAdapter(viajes, ViajesActivity.this);
+
+                        // Setup column number
+                        if (switchCol.isChecked()) {
+                            gridLayoutManager = new GridLayoutManager(ViajesActivity.this, 2);
+                        } else {
+                            gridLayoutManager = new GridLayoutManager(ViajesActivity.this, 1);
+                        }
+                        recyclerView.setLayoutManager(gridLayoutManager);
+                        recyclerView.setAdapter(adapter);
+                    }
+                });
+            }
+        });
+    }
+
+    public void getViajes(FirebaseCallback firebaseCallback) {
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                viajes = new ArrayList<>();
+                if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
+                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                        // id
+                        String id = ds.getKey();
+                        String descripcion = ds.child("descripcion").getValue().toString();
+                        Long fechasInicio = Long.parseLong(ds.child("fechasInicio").getValue().toString());
+                        Long fechasFin = Long.parseLong(ds.child("fechasFin").getValue().toString());
+                        Long precio = Long.parseLong(ds.child("precio").getValue().toString());
+                        String lugarSalida = ds.child("lugarSalida").getValue().toString();
+                        String nombre = ds.child("nombre").getValue().toString();
+                        String url = ds.child("url").getValue().toString();
+                        Viaje viaje= new Viaje(fechasInicio, fechasFin, nombre, lugarSalida, url, precio, descripcion, false);
+                        viaje.setId(id);
+                        viajes.add(viaje);
+                    }
+                }
+                firebaseCallback.onCallback(viajes);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("ERR", databaseError.getMessage());
+            }
+        };
+        refViaje.addValueEventListener(valueEventListener);
+    }
+
+    public void getUserViajesId(FirebaseCallbackIdViajes firebaseCallbackIdViajes) {
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userViajesId = new ArrayList<>();
+                if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
+                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                        // id
+                        String id = ds.getValue().toString();
+
+                        userViajesId.add(id);
+                    }
+                }
+                firebaseCallbackIdViajes.onCallback(userViajesId);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("ERR", databaseError.getMessage());
+            }
+        };
+        refUserViajes.addValueEventListener(valueEventListener);
+    }
+
+    public interface FirebaseCallback {
+        void onCallback(List<Viaje> listV);
+    }
+
+    public interface FirebaseCallbackIdViajes {
+        void onCallback(List<String> listId);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -85,7 +170,6 @@ public class ViajesActivity extends AppCompatActivity {
         Long fechaFinPref = prefs.getLong(Constantes.fechaFin, 0);
         Long precioMin = prefs.getLong(Constantes.precioMin, 0);
         Long precioMax = prefs.getLong(Constantes.precioMax, 0);
-        Long test = viajes.get(0).getFechasInicio();
         // First use date filter
         if (fechaInicioPref != 0 && fechaFinPref == 0) {
             viajesFiltrados = viajes.stream().filter(viaje -> viaje.getFechasInicio() >= fechaInicioPref).collect(Collectors.toList());
@@ -131,5 +215,36 @@ public class ViajesActivity extends AppCompatActivity {
             gridLayoutManager = new GridLayoutManager(this, 1);
         }
         recyclerView.setLayoutManager(gridLayoutManager);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public List<Viaje> genTravelAndSaveThem(Integer numViaje) {
+        viajes = Viaje.generarViaje(numViaje);
+        FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
+
+        for (Viaje viaje :viajes) {
+            firebaseDatabaseService.createTravel(viaje, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                    if (databaseError == null ) {
+                        Log.i("App", "Viaje insertado");
+                    } else {
+                        Log.i("App", "Error viaje no insertado");
+                    }
+                }
+            });
+        }
+
+        return viajes;
+    }
+
+    public void checkSelectedTrip() {
+        for (Viaje v : viajes) {
+            for (String id : userViajesId) {
+                if (v.getId().equals(id)){
+                    v.setSeleccionado(true);
+                }
+            }
+        }
     }
 }

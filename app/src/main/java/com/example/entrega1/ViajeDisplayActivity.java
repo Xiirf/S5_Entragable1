@@ -1,18 +1,25 @@
 package com.example.entrega1;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.entrega1.entity.Util;
 import com.example.entrega1.entity.Viaje;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
@@ -22,10 +29,10 @@ import java.util.List;
 
 public class ViajeDisplayActivity extends AppCompatActivity {
 
-    TextView textViewTitulo, textViewFechaLlegada, textViewFechaSalida, textViewLugarSalida,
+    private TextView textViewTitulo, textViewFechaLlegada, textViewFechaSalida, textViewLugarSalida,
     textViewPrecio, textViewDescription;
-    ImageView imageViewViaje, imageViewStar;
-    Viaje viaje;
+    private ImageView imageViewViaje, imageViewStar;
+    private Viaje viaje;
 
 
     @Override
@@ -66,24 +73,32 @@ public class ViajeDisplayActivity extends AppCompatActivity {
     }
 
     public void onSelect(View view) {
-        viaje.setSeleccionado(!viaje.isSeleccionado());
-        // For the moment we dont have API so we have to actualize the trip list in preferences
-        List<Viaje> viajes;
-        SharedPreferences prefs = this.getSharedPreferences("Viaje", Context.MODE_PRIVATE);
-        String viajesJSONString = prefs.getString("viajes", null);
-        Type type = new TypeToken<List<Viaje>>() {}.getType();
-        viajes = new Gson().fromJson(viajesJSONString, type);
-        for (Viaje v : viajes){
-            if (v.getId().equals(viaje.getId())){
-                v.setSeleccionado(!v.isSeleccionado());
-            }
+        FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
+        if (!viaje.isSeleccionado()) {
+            firebaseDatabaseService.addUserTravel(viaje.getId(), new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                    if (databaseError == null ) {
+                        viaje.setSeleccionado(!viaje.isSeleccionado());
+                        setImageViewStar();
+                    } else {
+                        Log.i("App", "Error viaje no insertado");
+                    }
+                }
+            });
+        } else {
+            firebaseDatabaseService.deleteUserTravel(viaje.getId(), new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                    if (databaseError == null ) {
+                        viaje.setSeleccionado(!viaje.isSeleccionado());
+                        setImageViewStar();
+                    } else {
+                        Log.i("App", "Error viaje no insertado");
+                    }
+                }
+            });
         }
-        viajesJSONString = new Gson().toJson(viajes);
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.putString("viajes", viajesJSONString);
-        edit.apply();
-        // Change image view
-        setImageViewStar();
     }
 
     @Override
