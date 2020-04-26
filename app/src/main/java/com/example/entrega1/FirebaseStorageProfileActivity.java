@@ -69,7 +69,6 @@ public class FirebaseStorageProfileActivity extends AppCompatActivity {
                             .placeholder(R.drawable.ic_person_black)
                             .centerCrop()
                             .into(takePictureImage);
-                    takePictureImage.setImageURI(task.getResult());
                 }
             }
         });
@@ -122,6 +121,7 @@ public class FirebaseStorageProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.i("TEST", "IN");
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == TAKE_PHOTO_CODE && resultCode == RESULT_OK) {
@@ -145,7 +145,6 @@ public class FirebaseStorageProfileActivity extends AppCompatActivity {
                                             .placeholder(R.drawable.ic_person_black)
                                             .centerCrop()
                                             .into(takePictureImage);
-                                    takePictureImage.setImageURI(task.getResult());
                                 }
                             }
                         });
@@ -185,5 +184,11 @@ public class FirebaseStorageProfileActivity extends AppCompatActivity {
                 break;
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
     }
 }
