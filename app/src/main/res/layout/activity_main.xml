@@ -15,13 +15,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:weightSum="4">
+        tools:weightSum="10">
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3" />
+            android:layout_weight="8" />
+
+        <ImageButton
+            android:id="@+id/profile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:onClick="goToProfilePage"
+            app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 
         <ImageButton
             android:id="@+id/disconnectButton"

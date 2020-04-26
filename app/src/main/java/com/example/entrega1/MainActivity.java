@@ -46,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.logout_error), Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void goToProfilePage(View view) {
+        startActivity(new Intent(this, FirebaseStorageProfileActivity.class));
+    }
 }
 
 class EnlaceAdapter extends BaseAdapter {

@@ -53,4 +53,11 @@
     <string name="description_form_error">Se debe indicar la descripción del viaje</string>
     <string name="fechaInicio_form_error">Se debe indicar una fecha de inicio</string>
     <string name="fechaFin_form_error">Se debe indicar una fecha de fin</string>
+    <string name="take_picture">Cambiar imagen</string>
+    <string name="take_picture_camera_rationale">Nececitamos acceso a tu camara</string>
+    <string name="take_picture_camera_rationale_ok">Permitir</string>
+    <string name="camera_not_granted">No esta posible usar esta funcion sin camara</string>
+    <string name="storage_not_granted">No se puede Almacenar la foto</string>
+    <string name="correo_electr_nico">Correo electrónico:</string>
+    <string name="p_gina_de_perfil">Página de perfil</string>
 </resources>
