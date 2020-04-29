@@ -30,7 +30,7 @@ import java.util.List;
 public class ViajeDisplayActivity extends AppCompatActivity {
 
     private TextView textViewTitulo, textViewFechaLlegada, textViewFechaSalida, textViewLugarSalida,
-    textViewPrecio, textViewDescription;
+    textViewPrecio, textViewDescription, textViewDistancia;
     private ImageView imageViewViaje, imageViewStar;
     private Viaje viaje;
 
@@ -47,6 +47,7 @@ public class ViajeDisplayActivity extends AppCompatActivity {
         imageViewStar = findViewById(R.id.imageViewStar);
         imageViewViaje = findViewById(R.id.imageViaje);
         textViewDescription = findViewById(R.id.textViewDescription);
+        textViewDistancia = findViewById(R.id.textView_DistanciaDisplay);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -58,6 +59,7 @@ public class ViajeDisplayActivity extends AppCompatActivity {
             textViewLugarSalida.setText(viaje.getLugarSalida());
             textViewPrecio.setText(Long.toString(viaje.getPrecio()));
             textViewDescription.setText(viaje.getDescripcion());
+            textViewDistancia.setText(Integer.toString((int) viaje.getDistanciaUsuarioSalida()) + " Km");
             setImageViewStar();
         }
     }

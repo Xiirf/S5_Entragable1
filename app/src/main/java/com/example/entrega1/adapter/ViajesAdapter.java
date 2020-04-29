@@ -56,6 +56,7 @@ public class ViajesAdapter extends RecyclerView.Adapter<ViajesAdapter.ViewHolder
                 Util.formateaFecha(viaje.getFechasInicio())));
         holder.textViewLlegadaViaje.setText(String.format("Llegada: %s",
                 Util.formateaFecha(viaje.getFechasFin())));
+        holder.distanciaViaje.setText("Distancia: " + Integer.toString((int) viaje.getDistanciaUsuarioSalida()) + " Km");
         //Checkbouton
         Drawable image = activity.getResources().getDrawable(R.drawable.ic_star_border_black_24dp);
         // TODO méthode qui vérifie si l'utilisateur actuel possède ce voyage
@@ -75,7 +76,8 @@ public class ViajesAdapter extends RecyclerView.Adapter<ViajesAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView, imageViewComprarOrStar;
-        TextView textViewTitulo, textViewPrecioViaje, textViewSalidaViaje, textViewLlegadaViaje;
+        TextView textViewTitulo, textViewPrecioViaje, textViewSalidaViaje, textViewLlegadaViaje,
+                distanciaViaje;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageViewViaje);
@@ -84,6 +86,7 @@ public class ViajesAdapter extends RecyclerView.Adapter<ViajesAdapter.ViewHolder
             textViewSalidaViaje = itemView.findViewById(R.id.textViewSalidaViaje);
             textViewLlegadaViaje = itemView.findViewById(R.id.textViewLlegadaViaje);
             imageViewComprarOrStar = itemView.findViewById(R.id.imageViewComprarOrStar);
+            distanciaViaje = itemView.findViewById(R.id.textView_Distancia);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -7,6 +7,9 @@ public final class Constantes {
             "Luxemburgo","Skopje","La Valeta","Chisinau","Monaco","Podgorica","Oslo","Amsterdam","Varsovia",
             "Lisboa","Londres","Bucarest","MoscÃº","Ciudad De San Marino","Belgrado","Estocolmo","Berna","Kiev",
             "Ciudad Del Vaticano"};
+
+    public final static Double[] latitude = {37.389176, 36.720181, 37.019155, 41.387576, 40.416104, 39.460945};
+    public final static Double[] longitude = {-5.984482, -4.429693, -7.931007, 2.173813, -3.703961, -0.376231};
     public final static String[] lugarSalida={"Sevilla","Malaga","Faro","Barcelona","Madrid","Valencia"};
     public final static String filtroPreferences="Filtro",fechaInicio="FechaInicio",fechaFin="FechaFin", precioMin="PrecioMin",
     precioMax="PrecioMax";

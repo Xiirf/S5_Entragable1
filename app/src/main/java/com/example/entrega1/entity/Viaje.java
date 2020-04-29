@@ -9,16 +9,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 public class Viaje implements Serializable {
     private Long fechasInicio, fechasFin;
     private String nombre, url, lugarSalida, id, descripcion;
     private Long precio;
     private boolean isSeleccionado;
+    private double longitudeSalida, latitudeSalida;
+    private float distanciaUsuarioSalida;
 
     public Viaje(Long fechasInicio, Long fechasFin, String nombre, String lugarSalida,
-                 String url, Long precio, String descripcion, boolean isSeleccionado) {
+                 String url, Long precio, String descripcion, boolean isSeleccionado, double longitudeSalida, double latitudeSalida) {
         this.fechasInicio = fechasInicio;
         this.fechasFin = fechasFin;
         this.lugarSalida = lugarSalida;
@@ -27,6 +28,32 @@ public class Viaje implements Serializable {
         this.precio = precio;
         this.descripcion = descripcion;
         this.isSeleccionado = isSeleccionado;
+        this.latitudeSalida = latitudeSalida;
+        this.longitudeSalida = longitudeSalida;
+    }
+
+    public float getDistanciaUsuarioSalida() {
+        return distanciaUsuarioSalida;
+    }
+
+    public void setDistanciaUsuarioSalida(float distanciaUsuarioSalida) {
+        this.distanciaUsuarioSalida = distanciaUsuarioSalida;
+    }
+
+    public double getLongitudeSalida() {
+        return longitudeSalida;
+    }
+
+    public void setLongitudeSalida(double longitudeSalida) {
+        this.longitudeSalida = longitudeSalida;
+    }
+
+    public double getLatitudeSalida() {
+        return latitudeSalida;
+    }
+
+    public void setLatitudeSalida(double latitudeSalida) {
+        this.latitudeSalida = latitudeSalida;
     }
 
     public boolean isSeleccionado() {
@@ -112,6 +139,9 @@ public class Viaje implements Serializable {
                 ", id='" + id + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 ", precio=" + precio +
+                ", isSeleccionado=" + isSeleccionado +
+                ", longitudeSalida=" + longitudeSalida +
+                ", latitudeSalida=" + latitudeSalida +
                 '}';
     }
 
@@ -128,12 +158,15 @@ public class Viaje implements Serializable {
             Long fechasFin = fechas[1];
             String nombre = Constantes.ciudades[new Random().nextInt(numeroCiudades)];
             String url = Constantes.urlImagenes[new Random().nextInt(numeroUrlImagenes)];
-            String lugarSalida = Constantes.lugarSalida[new Random().nextInt(numeroLugarSalida)];
+            int salida = new Random().nextInt(numeroLugarSalida);
+            String lugarSalida = Constantes.lugarSalida[salida];
+            double latitude = Constantes.latitude[salida];
+            double longitude = Constantes.longitude[salida];
             Long precio = new Long(new Random().nextInt(5000) +1);
             String descripcion = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet libero vehicula, molestie sapien id, placerat nulla. Nullam volutpat augue sed lorem pellentesque dapibus. Duis maximus, dolor et accumsan blandit, velit ex fringilla risus, sed congue augue justo at nisl. Integer volutpat maximus fermentum. Donec nec suscipit libero, eu maximus dui. Aenean imperdiet porttitor nisl, tristique pharetra massa eleifend eget. Mauris ullamcorper turpis sit amet volutpat cursus. Donec at arcu non ante commodo interdum quis eu leo. Fusce mollis tellus nibh, id tempus nibh fermentum eu. Morbi ut enim rhoncus, interdum felis vitae, mattis justo. Aliquam semper lacus at risus pharetra elementum.\n" +
                     "\n" +
                     "Mauris magna arcu, volutpat vel malesuada sit amet, efficitur a justo. Praesent aliquet euismod pellentesque. Phasellus facilisis ante vitae massa pretium, ut ullamcorper lorem tincidunt. Sed tempus ac ex non interdum. Aenean tellus nunc, porttitor ut dui in, tempor placerat quam. Integer nec urna blandit, aliquet arcu vitae, venenatis magna. Nullam mattis libero justo, vel consequat elit mollis at. Curabitur finibus lacinia bibendum. Phasellus euismod, eros et vehicula luctus, mi nisi consequat justo, at varius magna mi id nisi. Maecenas ipsum ante, blandit vitae ante quis, posuere venenatis nisi. Suspendisse placerat lorem sed massa rhoncus maximus. Nunc in mauris accumsan, placerat quam vitae, facilisis diam. Cras vitae nunc diam. Aliquam in rutrum nisi.";
-            viajes.add(new Viaje(fechasInicio, fechasFin, lugarSalida, nombre, url, precio, descripcion, false));
+            viajes.add(new Viaje(fechasInicio, fechasFin, lugarSalida, nombre, url, precio, descripcion, false, longitude, latitude));
         }
         return viajes;
     }
@@ -145,6 +178,9 @@ public class Viaje implements Serializable {
 
         Viaje viaje = (Viaje) o;
 
+        if (isSeleccionado != viaje.isSeleccionado) return false;
+        if (Double.compare(viaje.longitudeSalida, longitudeSalida) != 0) return false;
+        if (Double.compare(viaje.latitudeSalida, latitudeSalida) != 0) return false;
         if (fechasInicio != null ? !fechasInicio.equals(viaje.fechasInicio) : viaje.fechasInicio != null)
             return false;
         if (fechasFin != null ? !fechasFin.equals(viaje.fechasFin) : viaje.fechasFin != null)
@@ -161,7 +197,9 @@ public class Viaje implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = fechasInicio != null ? fechasInicio.hashCode() : 0;
+        int result;
+        long temp;
+        result = fechasInicio != null ? fechasInicio.hashCode() : 0;
         result = 31 * result + (fechasFin != null ? fechasFin.hashCode() : 0);
         result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
@@ -169,6 +207,11 @@ public class Viaje implements Serializable {
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (descripcion != null ? descripcion.hashCode() : 0);
         result = 31 * result + (precio != null ? precio.hashCode() : 0);
+        result = 31 * result + (isSeleccionado ? 1 : 0);
+        temp = Double.doubleToLongBits(longitudeSalida);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(latitudeSalida);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 

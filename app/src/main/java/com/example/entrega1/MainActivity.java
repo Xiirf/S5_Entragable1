@@ -2,9 +2,13 @@ package com.example.entrega1;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +28,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     GridView gridView;
+    private static final int PERMISSION_REQUEST_CODE_LOCATION = 0x123;
+    private TextView location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,17 @@ public class MainActivity extends AppCompatActivity {
         gridView = findViewById(R.id.gridView);
         EnlaceAdapter enlaceAdapter = new EnlaceAdapter(Enlace.generaEnlaces(), this);
         gridView.setAdapter(enlaceAdapter);
+
+        String[] permissions = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
+        if (ContextCompat.checkSelfPermission(this, permissions[0]) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
+                Snackbar.make(gridView, R.string.location_rationale, Snackbar.LENGTH_LONG).setAction(R.string.location_rationale_ok, view -> {
+                    ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSION_REQUEST_CODE_LOCATION);
+                }).show();
+            } else {
+                ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSION_REQUEST_CODE_LOCATION);
+            }
+        }
     }
 
     public void disconnect(View view) {

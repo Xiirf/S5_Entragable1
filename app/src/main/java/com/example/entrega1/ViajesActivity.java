@@ -4,12 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +26,9 @@ import android.widget.Toast;
 import com.example.entrega1.adapter.ViajesAdapter;
 import com.example.entrega1.entity.Constantes;
 import com.example.entrega1.entity.Viaje;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -58,7 +66,7 @@ public class ViajesActivity extends AppCompatActivity {
         refViaje = firebaseDatabaseService.getTravels();
         refUserViajes = firebaseDatabaseService.getUserTravels();
         //Generate some trips and save them in database
-        //genTravelAndSaveThem(20);
+        genTravelAndSaveThem(20);
         getViajes(new FirebaseCallback() {
             @Override
             public void onCallback(List<Viaje> listV) {
@@ -77,14 +85,30 @@ public class ViajesActivity extends AppCompatActivity {
 
                         ViajesAdapter adapter = new ViajesAdapter(viajes, ViajesActivity.this);
 
-                        // Setup column number
-                        if (switchCol.isChecked()) {
-                            gridLayoutManager = new GridLayoutManager(ViajesActivity.this, 2);
-                        } else {
-                            gridLayoutManager = new GridLayoutManager(ViajesActivity.this, 1);
-                        }
-                        recyclerView.setLayoutManager(gridLayoutManager);
-                        recyclerView.setAdapter(adapter);
+                        getUserLocation(new LocationUserCallback() {
+                            @Override
+                            public void onCallback(Location location) {
+                                // Add distancia
+                                String[] permissions = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
+                                if (ContextCompat.checkSelfPermission(ViajesActivity.this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+                                    for (Viaje viaje :viajes) {
+                                        Location locationViaje = new Location("");
+                                        locationViaje.setLatitude(viaje.getLatitudeSalida());
+                                        locationViaje.setLongitude(viaje.getLongitudeSalida());
+
+                                        viaje.setDistanciaUsuarioSalida(location.distanceTo(locationViaje) / 1000);
+                                    }
+                                }
+                                // Setup column number
+                                if (switchCol.isChecked()) {
+                                    gridLayoutManager = new GridLayoutManager(ViajesActivity.this, 2);
+                                } else {
+                                    gridLayoutManager = new GridLayoutManager(ViajesActivity.this, 1);
+                                }
+                                recyclerView.setLayoutManager(gridLayoutManager);
+                                recyclerView.setAdapter(adapter);
+                            }
+                        });
                     }
                 });
             }
@@ -107,7 +131,10 @@ public class ViajesActivity extends AppCompatActivity {
                         String lugarSalida = ds.child("lugarSalida").getValue().toString();
                         String nombre = ds.child("nombre").getValue().toString();
                         String url = ds.child("url").getValue().toString();
-                        Viaje viaje= new Viaje(fechasInicio, fechasFin, nombre, lugarSalida, url, precio, descripcion, false);
+                        Double longitude = Double.parseDouble(ds.child("longitudeSalida").getValue().toString());
+                        Double latitude = Double.parseDouble(ds.child("latitudeSalida").getValue().toString());
+                        Viaje viaje= new Viaje(fechasInicio, fechasFin, nombre, lugarSalida, url,
+                                    precio, descripcion, false, longitude, latitude);
                         viaje.setId(id);
                         viajes.add(viaje);
                     }
@@ -147,12 +174,26 @@ public class ViajesActivity extends AppCompatActivity {
         refUserViajes.addValueEventListener(valueEventListener);
     }
 
+    public void getUserLocation(LocationUserCallback locationUserCallback) {
+        FusedLocationProviderClient locationServices = LocationServices.getFusedLocationProviderClient(ViajesActivity.this);
+        locationServices.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                Location location = task.getResult();
+                locationUserCallback.onCallback(location);
+            }
+        });
+    }
+
     public interface FirebaseCallback {
         void onCallback(List<Viaje> listV);
     }
 
     public interface FirebaseCallbackIdViajes {
         void onCallback(List<String> listId);
+    }
+
+    public interface LocationUserCallback {
+        void onCallback(Location location);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

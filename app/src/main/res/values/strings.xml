@@ -60,4 +60,14 @@
     <string name="storage_not_granted">No se puede Almacenar la foto</string>
     <string name="correo_electr_nico">Correo electrónico:</string>
     <string name="p_gina_de_perfil">Página de perfil</string>
+    <string name="location_rationale">Necesitamos tu localizacion para esta funcionalidad</string>
+    <string name="location_rationale_ok">Ok</string>
+    <string name="location_cancel">Permision importante para la app</string>
+    <string name="latitud_del_punto_de_salida">Latitud del punto de salida</string>
+    <string name="longitud_del_punto_de_salida">Longitud del punto de salida</string>
+    <string name="latitude_required">Se debe indicar la latitud</string>
+    <string name="latitude_invalid">La latitud debe estar entre 90 y -90 no incluido</string>
+    <string name="longitude_required">Se debe indicar la longitud</string>
+    <string name="distancia_con_mi_posici_n">Distancia con mi posición</string>
+    <string name="longitude_invalid">La longitud debe estar entre -180 y 180 no incluido</string>
 </resources>

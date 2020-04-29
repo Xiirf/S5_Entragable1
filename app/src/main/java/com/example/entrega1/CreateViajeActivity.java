@@ -39,13 +39,22 @@ public class CreateViajeActivity extends AppCompatActivity {
     private TextView textViewFechaInicio, textViewFechaFin;
     private DatePickerDialog dialogInicio, dialogFin;
     private Calendar fechaInicio, fechaFin;
-    private AutoCompleteTextView nombreTrip, lugarSalida, precioTrip, descriptionTrip;
-    private TextInputLayout nombreTripParent, lugarSalidaParent, precioTripParent, descriptionTripParent, fechaInicioParent, fechaFinParent;
+    private AutoCompleteTextView nombreTrip, lugarSalida, precioTrip, descriptionTrip,
+            latitudeSalida, longitudeSalida;
+    private TextInputLayout nombreTripParent, lugarSalidaParent, precioTripParent,
+            descriptionTripParent, fechaInicioParent, fechaFinParent, latitudeSalidaParent,
+            longitudeSalidaParent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_viaje);
+
+        latitudeSalida = findViewById(R.id.latitude_trip_et);
+        latitudeSalidaParent = findViewById(R.id.latitude_trip);
+
+        longitudeSalida = findViewById(R.id.longitude_trip_et);
+        longitudeSalidaParent = findViewById(R.id.longitude_trip);
 
         textViewFechaInicio = findViewById(R.id.textView_fechaInicio_form);
         fechaInicioParent = findViewById(R.id.fechaInicio_parent);
@@ -152,11 +161,14 @@ public class CreateViajeActivity extends AppCompatActivity {
         String lugarSalidaViaje = lugarSalida.getText().toString();
         Long precio = Long.parseLong(precioTrip.getText().toString());
         String description = descriptionTrip.getText().toString();
+        double latitude = Double.parseDouble(latitudeSalida.getText().toString());
+        double longitude = Double.parseDouble(longitudeSalida.getText().toString());
 
         int numeroUrlImagenes = Constantes.urlImagenes.length;
         String url = Constantes.urlImagenes[new Random().nextInt(numeroUrlImagenes)];
 
-        Viaje viaje = new Viaje(fechaInicioViaje, fechaFinViaje, nombreViaje, lugarSalidaViaje, url, precio, description, false);
+        Viaje viaje = new Viaje(fechaInicioViaje, fechaFinViaje, nombreViaje, lugarSalidaViaje, url,
+                                precio, description, false, longitude, latitude);
 
         FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
 
@@ -176,6 +188,7 @@ public class CreateViajeActivity extends AppCompatActivity {
 
 
     public void attemptCreateTrip(View view) {
+        boolean isOk = true;
         nombreTripParent.setError(null);
         lugarSalidaParent.setError(null);
         precioTripParent.setError(null);
@@ -199,8 +212,32 @@ public class CreateViajeActivity extends AppCompatActivity {
         } else if (fechaFin == null) {
             fechaFinParent.setErrorEnabled(true);
             fechaFinParent.setError(getString(R.string.fechaFin_form_error));
+        } else if (latitudeSalida.getText().length() == 0) {
+            latitudeSalidaParent.setErrorEnabled(true);
+            latitudeSalidaParent.setError(getString(R.string.latitude_required));
+        } else if (longitudeSalida.getText().length() == 0) {
+            longitudeSalidaParent.setErrorEnabled(true);
+            longitudeSalidaParent.setError(getString(R.string.longitude_required));
         } else {
-            crearTrip();
+            if(latitudeSalida.getText().length() != 0) {
+                double latitude = Double.parseDouble(latitudeSalida.getText().toString());
+                if (latitude >= 90 || latitude <= -90) {
+                    isOk = false;
+                    latitudeSalidaParent.setErrorEnabled(true);
+                    latitudeSalidaParent.setError(getString(R.string.latitude_invalid));
+                }
+            }
+            if(longitudeSalida.getText().length() != 0) {
+                double longitude = Double.parseDouble(longitudeSalida.getText().toString());
+                if (longitude >= 180 || longitude <= -180) {
+                    isOk = false;
+                    longitudeSalidaParent.setErrorEnabled(true);
+                    longitudeSalidaParent.setError(getString(R.string.longitude_invalid));
+                }
+            }
+            if (isOk) {
+                crearTrip();
+            }
         }
     }
 }

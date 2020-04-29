@@ -94,9 +94,12 @@ public class ViajesSeleccionadosActivity extends AppCompatActivity {
                         Long precio = Long.parseLong(ds.child("precio").getValue().toString());
                         String lugarSalida = ds.child("lugarSalida").getValue().toString();
                         String nombre = ds.child("nombre").getValue().toString();
+                        Double longitude = Double.parseDouble(ds.child("longitudeSalida").getValue().toString());
+                        Double latitude = Double.parseDouble(ds.child("latitudeSalida").getValue().toString());
                         String url = ds.child("url").getValue().toString();
 
-                        Viaje viaje= new Viaje(fechasInicio, fechasFin, nombre, lugarSalida, url, precio, descripcion, false);
+                        Viaje viaje= new Viaje(fechasInicio, fechasFin, nombre, lugarSalida, url,
+                                precio, descripcion, false, longitude, latitude);
                         viaje.setId(id);
                         viajes.add(viaje);
                     }
