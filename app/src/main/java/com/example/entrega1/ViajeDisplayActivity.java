@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,14 @@ import android.widget.TextView;
 
 import com.example.entrega1.entity.Util;
 import com.example.entrega1.entity.Viaje;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
@@ -27,13 +36,13 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class ViajeDisplayActivity extends AppCompatActivity {
+public class ViajeDisplayActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private TextView textViewTitulo, textViewFechaLlegada, textViewFechaSalida, textViewLugarSalida,
-    textViewPrecio, textViewDescription, textViewDistancia;
+            textViewPrecio, textViewDescription, textViewDistancia;
     private ImageView imageViewViaje, imageViewStar;
     private Viaje viaje;
-
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +71,13 @@ public class ViajeDisplayActivity extends AppCompatActivity {
             textViewDistancia.setText(Integer.toString((int) viaje.getDistanciaUsuarioSalida()) + " Km");
             setImageViewStar();
         }
+
+        //Map
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        supportMapFragment.getMapAsync(this);
     }
 
-    public void setImageViewStar(){
+    public void setImageViewStar() {
         if (!viaje.isSeleccionado()) {
             Drawable image = getResources().getDrawable(R.drawable.ic_star_border_black_24dp);
             imageViewStar.setImageDrawable(image);
@@ -80,7 +93,7 @@ public class ViajeDisplayActivity extends AppCompatActivity {
             firebaseDatabaseService.addUserTravel(viaje.getId(), new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                    if (databaseError == null ) {
+                    if (databaseError == null) {
                         viaje.setSeleccionado(!viaje.isSeleccionado());
                         setImageViewStar();
                     } else {
@@ -92,7 +105,7 @@ public class ViajeDisplayActivity extends AppCompatActivity {
             firebaseDatabaseService.deleteUserTravel(viaje.getId(), new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                    if (databaseError == null ) {
+                    if (databaseError == null) {
                         viaje.setSeleccionado(!viaje.isSeleccionado());
                         setImageViewStar();
                     } else {
@@ -104,10 +117,12 @@ public class ViajeDisplayActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
-        finish();
-        super.onBackPressed();
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+
+        LatLng location = new LatLng(viaje.getLatitudeSalida(), viaje.getLongitudeSalida());
+        googleMap.addMarker(new MarkerOptions().title("Posición del lugar de salida").position(location));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(location));
     }
 }
+
