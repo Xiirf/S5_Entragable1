@@ -70,4 +70,8 @@
     <string name="longitude_required">Se debe indicar la longitud</string>
     <string name="distancia_con_mi_posici_n">Distancia con mi posición</string>
     <string name="longitude_invalid">La longitud debe estar entre -180 y 180 no incluido</string>
+    <string name="open_weather_map_api_key">4a73877fd14db76d289ccec1e1e1bf9b</string>
+    <string name="ciudad">Ciudad</string>
+    <string name="weather">Weather</string>
+    <string name="temperatura">Temperatura</string>
 </resources>

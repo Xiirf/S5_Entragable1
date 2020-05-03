@@ -2,15 +2,10 @@ package com.example.entrega1;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,30 +14,32 @@ import android.widget.TextView;
 
 import com.example.entrega1.entity.Util;
 import com.example.entrega1.entity.Viaje;
-import com.google.android.gms.maps.CameraUpdate;
+import com.example.entrega1.resttypes.WeatherResponse;
+import com.example.entrega1.resttypes.WeatherRetrofitInterface;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Type;
-import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ViajeDisplayActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private TextView textViewTitulo, textViewFechaLlegada, textViewFechaSalida, textViewLugarSalida,
-            textViewPrecio, textViewDescription, textViewDistancia;
-    private ImageView imageViewViaje, imageViewStar;
+            textViewPrecio, textViewDescription, textViewDistancia, textViewTemperatura;
+    private ImageView imageViewViaje, imageViewStar, imageViewWeather;
     private Viaje viaje;
     private GoogleMap googleMap;
+    Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +54,8 @@ public class ViajeDisplayActivity extends FragmentActivity implements OnMapReady
         imageViewViaje = findViewById(R.id.imageViaje);
         textViewDescription = findViewById(R.id.textViewDescription);
         textViewDistancia = findViewById(R.id.textView_DistanciaDisplay);
+        textViewTemperatura = findViewById(R.id.textViewTemperatura);
+        imageViewWeather = findViewById(R.id.imageViewWeather);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -75,6 +74,29 @@ public class ViajeDisplayActivity extends FragmentActivity implements OnMapReady
         //Map
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
+
+        retrofit = new Retrofit.Builder().baseUrl("https://api.openweathermap.org/").addConverterFactory(GsonConverterFactory.create()).build();
+        WeatherRetrofitInterface service = retrofit.create(WeatherRetrofitInterface.class);
+        Call<WeatherResponse> response = service.getCurrentWeather(  (float) viaje.getLatitudeSalida(),
+                                    (float) viaje.getLongitudeSalida(),
+                                    getString(R.string.open_weather_map_api_key));
+
+        response.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    int degree = (int) ((response.body().getMain().getTemp() - 273.15 ));
+                    Log.i("TEMP", "" + (response.body().getMain().getTemp()));
+                    textViewTemperatura.setText(Integer.toString(degree) + " C°");
+                    setIconWeather(response.body().getWeather().get(0).getMain());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                Log.i("ERROR", "REST: error en la llama. " + t.getMessage());
+            }
+        });
     }
 
     public void setImageViewStar() {
@@ -85,6 +107,28 @@ public class ViajeDisplayActivity extends FragmentActivity implements OnMapReady
             Drawable image = getResources().getDrawable(R.drawable.ic_star_black_24dp);
             imageViewStar.setImageDrawable(image);
         }
+    }
+
+    public void setIconWeather(String weather) {
+        Drawable image = getResources().getDrawable(R.drawable.clear);
+        switch (weather) {
+            case "Clouds":
+                image = getResources().getDrawable(R.drawable.cloud);
+                break;
+            case "Drizzle":
+                image = getResources().getDrawable(R.drawable.drizzle);
+                break;
+            case "Rain":
+                image = getResources().getDrawable(R.drawable.rain);
+                break;
+            case "Snow":
+                image = getResources().getDrawable(R.drawable.snow);
+                break;
+            case "Thunderstorm":
+                image = getResources().getDrawable(R.drawable.thunderstorm);
+                break;
+        }
+        imageViewWeather.setImageDrawable(image);
     }
 
     public void onSelect(View view) {

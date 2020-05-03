@@ -66,7 +66,7 @@ public class ViajesActivity extends AppCompatActivity {
         refViaje = firebaseDatabaseService.getTravels();
         refUserViajes = firebaseDatabaseService.getUserTravels();
         //Generate some trips and save them in database
-        genTravelAndSaveThem(20);
+        //genTravelAndSaveThem(20);
         getViajes(new FirebaseCallback() {
             @Override
             public void onCallback(List<Viaje> listV) {
